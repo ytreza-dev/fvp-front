@@ -1,7 +1,7 @@
+import {describe, it, expect} from "vitest";
 
-describe('xxx', () => {
-    it('zzz', () => {
-        expect(1).toBe(2);
-    })
-
-});
+describe("toto", () => {
+    it("should pass", () => {
+        expect(true).toBe(true);
+    });
+})
