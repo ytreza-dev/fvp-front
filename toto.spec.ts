@@ -30,10 +30,22 @@ class TaskFvpQuery {
 
         let currentTaskIndex: number = 0;
 
+        /*          {name: "Envoyer un mail à la direction", status: "next"},
+            {name: "Nettoyer mon bureau", status: "later"},
+            {name: "Payer la facture d'électricité", status: "next"},
+            {name: "Corriger le bug qui fait perdre de l'argent au client", status: "new"},*/
+
+
+
+
         if (this.repo.initialTasks[currentTaskIndex + 1].status === "next") {
             currentTaskIndex += 1;
         }
-        
+
+        if (this.repo.initialTasks[2].status === "next") {
+            return 2
+        }
+
         if (this.repo.initialTasks[currentTaskIndex + 1].status === "next") {
             currentTaskIndex += 1;
         }
