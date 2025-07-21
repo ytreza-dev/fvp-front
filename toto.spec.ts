@@ -28,13 +28,21 @@ class TaskFvpQuery {
 
     private getNextTaskIndex() {
 
-        let nextTaskIndex: number = 0;
+        let currentTaskIndex: number = 0;
 
-        while (this.repo.initialTasks[nextTaskIndex + 1].status === "next") {
-            nextTaskIndex += 1;
+        if (this.repo.initialTasks[currentTaskIndex + 1].status === "next") {
+            currentTaskIndex += 1;
+        }
+        
+        if (this.repo.initialTasks[currentTaskIndex + 1].status === "next") {
+            currentTaskIndex += 1;
         }
 
-        return nextTaskIndex;
+        if (this.repo.initialTasks[currentTaskIndex + 1].status === "next") {
+            currentTaskIndex += 1;
+        }
+
+        return currentTaskIndex;
     }
 }
 
@@ -168,7 +176,7 @@ describe("US-1 - Afficher deux tâche en comparaison", () => {
     });
 
 
-    it.skip("US-1-AC-6 : xxx", () => {
+    it("US-1-AC-6 : xxx", () => {
         // GIVEN
         const sut = new TaskFvpQuery();
         sut.repo = new TaskRepository()
