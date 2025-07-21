@@ -3,7 +3,7 @@ import {describe, expect, it} from "vitest";
 class TaskFvpQuery {
     public repo: TaskRepository;
 
-    query() {
+    query(): [Task, Task] {
         let nextTaskIndex = this.getNextTaskIndex();
         let newTaskIndex = this.getNewTaskIndex(nextTaskIndex);
 
@@ -27,31 +27,14 @@ class TaskFvpQuery {
     }
 
     private getNextTaskIndex() {
+        let currentTaskIndex: number = this.repo.initialTasks.length - 1;
 
-        let currentTaskIndex: number = 0;
+        while(currentTaskIndex > 0) {
+            if (this.repo.initialTasks[currentTaskIndex].status === "next") {
+                return currentTaskIndex;
+            }
 
-        /*          {name: "Envoyer un mail à la direction", status: "next"},
-            {name: "Nettoyer mon bureau", status: "later"},
-            {name: "Payer la facture d'électricité", status: "next"},
-            {name: "Corriger le bug qui fait perdre de l'argent au client", status: "new"},*/
-
-
-
-
-        if (this.repo.initialTasks[currentTaskIndex + 1].status === "next") {
-            currentTaskIndex += 1;
-        }
-
-        if (this.repo.initialTasks[2].status === "next") {
-            return 2
-        }
-
-        if (this.repo.initialTasks[currentTaskIndex + 1].status === "next") {
-            currentTaskIndex += 1;
-        }
-
-        if (this.repo.initialTasks[currentTaskIndex + 1].status === "next") {
-            currentTaskIndex += 1;
+            currentTaskIndex -= 1;
         }
 
         return currentTaskIndex;
@@ -209,4 +192,7 @@ describe("US-1 - Afficher deux tâche en comparaison", () => {
             name: "Payer la facture d'électricité",status: "next"
         }, {name: "Corriger le bug qui fait perdre de l'argent au client", status: "new"}]);
     });
+
+    
+
 })
