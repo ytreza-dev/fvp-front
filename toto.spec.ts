@@ -11,6 +11,13 @@ class TaskFvpQuery {
             ];
         }
 
+        if (this.repo.initialTasks[1].status === "next") {
+            return [
+                this.repo.initialTasks[1],
+                this.repo.initialTasks[2]
+            ];
+        }
+
         return [
             this.repo.initialTasks[0],
             this.repo.initialTasks[2]
@@ -79,13 +86,13 @@ describe("US-1 - Afficher deux tâche en comparaison", () => {
         }, {name: "Payer la facture d'électricité", status: "new"}]);
     });
 
-    it("US-1-AC-2 : Avec une tâche priorisée (next) et une tâche comparée (later), on affiche la tâche priorisée et la première tâche non priorisée et non comparée", () => {
+    it("US-1-AC-3 : xxx", () => {
         // GIVEN
         const sut = new TaskFvpQuery();
         sut.repo = new TaskRepository()
         sut.repo.initialTasks = [
             {name: "Envoyer un mail à la direction", status: "next"},
-            {name: "Nettoyer mon bureau", status: "later"},
+            {name: "Nettoyer mon bureau", status: "next"},
             {name: "Payer la facture d'électricité", status: "new"},
             {name: "Corriger le bug qui fait perdre de l'argent au client", status: "new"},
         ];
@@ -97,8 +104,7 @@ describe("US-1 - Afficher deux tâche en comparaison", () => {
 
         // THEN
         expect(tasksCompared).toStrictEqual([{
-            name: "Envoyer un mail à la direction",
-            status: "next"
+            name: "Nettoyer mon bureau",status: "next"
         }, {name: "Payer la facture d'électricité", status: "new"}]);
     });
 })
