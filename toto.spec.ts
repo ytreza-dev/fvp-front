@@ -4,24 +4,37 @@ class TaskFvpQuery {
     public repo: TaskRepository;
 
     query() {
-        if (this.repo.initialTasks[1].status === "new") {
-            return [
-                this.repo.initialTasks[0],
-                this.repo.initialTasks[1]
-            ];
-        }
+        let nextTaskIndex = this.getNextTaskIndex();
+        let newTaskIndex = this.getNewTaskIndex(nextTaskIndex);
 
-        if (this.repo.initialTasks[1].status === "next") {
-            return [
-                this.repo.initialTasks[1],
-                this.repo.initialTasks[2]
-            ];
-        }
+        let newTask = this.repo.initialTasks[newTaskIndex];
 
         return [
-            this.repo.initialTasks[0],
-            this.repo.initialTasks[2]
+            this.repo.initialTasks[nextTaskIndex],
+            newTask
         ];
+
+    }
+
+    private getNewTaskIndex(nextTaskIndex: number) {
+        let newTaskIndex = nextTaskIndex + 1;
+
+        if (this.repo.initialTasks[newTaskIndex].status === "later") {
+            newTaskIndex += 1;
+        }
+
+        return newTaskIndex;
+    }
+
+    private getNextTaskIndex() {
+
+        let nextTaskIndex: number = 0;
+
+        while (this.repo.initialTasks[nextTaskIndex + 1].status === "next") {
+            nextTaskIndex += 1;
+        }
+
+        return nextTaskIndex;
     }
 }
 
@@ -106,5 +119,74 @@ describe("US-1 - Afficher deux tâche en comparaison", () => {
         expect(tasksCompared).toStrictEqual([{
             name: "Nettoyer mon bureau",status: "next"
         }, {name: "Payer la facture d'électricité", status: "new"}]);
+    });
+
+
+    it("US-1-AC-4 : xxx", () => {
+        // GIVEN
+        const sut = new TaskFvpQuery();
+        sut.repo = new TaskRepository()
+        sut.repo.initialTasks = [
+            {name: "Envoyer un mail à la direction", status: "next"},
+            {name: "Nettoyer mon bureau", status: "next"},
+            {name: "Payer la facture d'électricité", status: "later"},
+            {name: "Corriger le bug qui fait perdre de l'argent au client", status: "new"},
+        ];
+
+        // WHEN
+        let tasksCompared = sut.query()
+        // Quand
+        // on affiche la comparaison
+
+        // THEN
+        expect(tasksCompared).toStrictEqual([{
+            name: "Nettoyer mon bureau",status: "next"
+        }, {name: "Corriger le bug qui fait perdre de l'argent au client", status: "new"}]);
+    });
+
+
+    it("US-1-AC-5 : xxx", () => {
+        // GIVEN
+        const sut = new TaskFvpQuery();
+        sut.repo = new TaskRepository()
+        sut.repo.initialTasks = [
+            {name: "Envoyer un mail à la direction", status: "next"},
+            {name: "Nettoyer mon bureau", status: "next"},
+            {name: "Payer la facture d'électricité", status: "next"},
+            {name: "Corriger le bug qui fait perdre de l'argent au client", status: "new"},
+        ];
+
+        // WHEN
+        let tasksCompared = sut.query()
+        // Quand
+        // on affiche la comparaison
+
+        // THEN
+        expect(tasksCompared).toStrictEqual([{
+            name: "Payer la facture d'électricité",status: "next"
+        }, {name: "Corriger le bug qui fait perdre de l'argent au client", status: "new"}]);
+    });
+
+
+    it.skip("US-1-AC-6 : xxx", () => {
+        // GIVEN
+        const sut = new TaskFvpQuery();
+        sut.repo = new TaskRepository()
+        sut.repo.initialTasks = [
+            {name: "Envoyer un mail à la direction", status: "next"},
+            {name: "Nettoyer mon bureau", status: "later"},
+            {name: "Payer la facture d'électricité", status: "next"},
+            {name: "Corriger le bug qui fait perdre de l'argent au client", status: "new"},
+        ];
+
+        // WHEN
+        let tasksCompared = sut.query()
+        // Quand
+        // on affiche la comparaison
+
+        // THEN
+        expect(tasksCompared).toStrictEqual([{
+            name: "Payer la facture d'électricité",status: "next"
+        }, {name: "Corriger le bug qui fait perdre de l'argent au client", status: "new"}]);
     });
 })
